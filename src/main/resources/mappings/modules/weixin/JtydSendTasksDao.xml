@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydSendTasksDao">
+    
+	<sql id="jtydSendTasksColumns">
+		a.id AS "id",
+		a.article_id AS "articleId",
+		a.platform_id AS "platformId",
+		a.user_name AS "userName",
+		a.user_password AS "userPassword",
+		a.send_rate_id AS "sendRateId",
+		a.fans_keywords_id AS "fansKeywordsId",
+		a.flag AS "flag",
+		a.concents AS "concents",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jtydSendTasksJoins">
+	</sql>
+    
+	<select id="get" resultType="JtydSendTasks">
+		SELECT 
+			<include refid="jtydSendTasksColumns"/>
+		FROM jtyd_send_tasks a
+		<include refid="jtydSendTasksJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JtydSendTasks">
+		SELECT 
+			<include refid="jtydSendTasksColumns"/>
+		FROM jtyd_send_tasks a
+		<include refid="jtydSendTasksJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="articleId != null and articleId != ''">
+				AND a.article_id = #{articleId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JtydSendTasks">
+		SELECT 
+			<include refid="jtydSendTasksColumns"/>
+		FROM jtyd_send_tasks a
+		<include refid="jtydSendTasksJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_send_tasks(
+			id,
+			article_id,
+			platform_id,
+			user_name,
+			user_password,
+			send_rate_id,
+			fans_keywords_id,
+			flag,
+			concents,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{articleId},
+			#{platformId},
+			#{userName},
+			#{userPassword},
+			#{sendRateId},
+			#{fansKeywordsId},
+			#{flag},
+			#{concents},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_send_tasks SET 	
+			article_id = #{articleId},
+			platform_id = #{platformId},
+			user_name = #{userName},
+			user_password = #{userPassword},
+			send_rate_id = #{sendRateId},
+			fans_keywords_id = #{fansKeywordsId},
+			flag = #{flag},
+			concents = #{concents},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jtyd_send_tasks SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

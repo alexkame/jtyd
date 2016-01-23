@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydWeiboUserDao">
+    
+	<sql id="jtydWeiboUserColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.user_name AS "userName",
+		a.base_address AS "baseAddress",
+		a.gender AS "gender",
+		a.sex AS "sex",
+		a.emotion AS "emotion",
+		a.birthday AS "birthday",
+		a.blood AS "blood",
+		a.constellation AS "constellation",
+		a.intro AS "intro",
+		a.blog AS "blog",
+		a.msn AS "msn",
+		a.qq AS "qq",
+		a.school AS "school",
+		a.company AS "company",
+		a.company_addr AS "companyAddr",
+		a.company_job AS "companyJob",
+		a.tag AS "tag",
+		a.attentions AS "attentions",
+		a.fans AS "fans",
+		a.send_count AS "sendCount",
+		a.grab_tag AS "grabTag",
+		a.class_tag AS "classTag",
+		a.fetched_time AS "fetchedTime",
+		a.url AS "url"
+	</sql>
+	
+	<sql id="jtydWeiboUserJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="JtydWeiboUser">
+		SELECT 
+			<include refid="jtydWeiboUserColumns"/>
+		FROM jtyd_weibo_user a
+		<include refid="jtydWeiboUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JtydWeiboUser">
+		SELECT 
+			<include refid="jtydWeiboUserColumns"/>
+		FROM jtyd_weibo_user a
+		<include refid="jtydWeiboUserJoins"/>
+		<where>
+			
+			<if test="userName != null and userName != ''">
+				AND a.user_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{userName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{userName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{userName},'%')</if>
+			</if>
+		</where>
+		ORDER BY fans desc
+	</select>
+	
+	<select id="findAllList" resultType="JtydWeiboUser">
+		SELECT 
+			<include refid="jtydWeiboUserColumns"/>
+		FROM jtyd_weibo_user a
+		<include refid="jtydWeiboUserJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_weibo_user(
+			id,
+			user_id,
+			user_name,
+			base_address,
+			gender,
+			sex,
+			emotion,
+			birthday,
+			blood,
+			constellation,
+			intro,
+			blog,
+			msn,
+			qq,
+			school,
+			company,
+			company_addr,
+			company_job,
+			tag,
+			attentions,
+			fans,
+			send_count,
+			grab_tag,
+			class_tag,
+			fetched_time,
+			url
+		) VALUES (
+			#{id},
+			#{userId},
+			#{userName},
+			#{baseAddress},
+			#{gender},
+			#{sex},
+			#{emotion},
+			#{birthday},
+			#{blood},
+			#{constellation},
+			#{intro},
+			#{blog},
+			#{msn},
+			#{qq},
+			#{school},
+			#{company},
+			#{companyAddr},
+			#{companyJob},
+			#{tag},
+			#{attentions},
+			#{fans},
+			#{sendCount},
+			#{grabTag},
+			#{classTag},
+			#{fetchedTime},
+			#{url}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_weibo_user SET 	
+			user_id = #{userId},
+			user_name = #{userName},
+			base_address = #{baseAddress},
+			gender = #{gender},
+			sex = #{sex},
+			emotion = #{emotion},
+			birthday = #{birthday},
+			blood = #{blood},
+			constellation = #{constellation},
+			intro = #{intro},
+			blog = #{blog},
+			msn = #{msn},
+			qq = #{qq},
+			school = #{school},
+			company = #{company},
+			company_addr = #{companyAddr},
+			company_job = #{companyJob},
+			tag = #{tag},
+			attentions = #{attentions},
+			fans = #{fans},
+			send_count = #{sendCount},
+			grab_tag = #{grabTag},
+			class_tag = #{classTag},
+			fetched_time = #{fetchedTime},
+			url = #{url}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jtyd_weibo_user
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

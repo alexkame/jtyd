@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydWeixinUserDao">
+    
+	<sql id="jtydWeixinUserColumns">
+		a.id AS "id",
+		a.weixin_name AS "weixinName",
+		a.weixin_code AS "weixinCode",
+		a.weixin_desc AS "weixinDesc",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jtydWeixinUserJoins">
+	</sql>
+    
+	<select id="get" resultType="JtydWeixinUser">
+		SELECT 
+			<include refid="jtydWeixinUserColumns"/>
+		FROM jtyd_weixin_user a
+		<include refid="jtydWeixinUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JtydWeixinUser">
+		SELECT 
+			<include refid="jtydWeixinUserColumns"/>
+		FROM jtyd_weixin_user a
+		<include refid="jtydWeixinUserJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="weixinName != null and weixinName != ''">
+				AND a.weixin_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{weixinName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{weixinName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{weixinName},'%')</if>
+			</if>
+			<if test="weixinCode != null and weixinCode != ''">
+				AND a.weixin_code = #{weixinCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JtydWeixinUser">
+		SELECT 
+			<include refid="jtydWeixinUserColumns"/>
+		FROM jtyd_weixin_user a
+		<include refid="jtydWeixinUserJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_weixin_user(
+			id,
+			weixin_name,
+			weixin_code,
+			weixin_desc,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{weixinName},
+			#{weixinCode},
+			#{weixinDesc},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_weixin_user SET 	
+			weixin_name = #{weixinName},
+			weixin_code = #{weixinCode},
+			weixin_desc = #{weixinDesc},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jtyd_weixin_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

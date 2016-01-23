@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydWeixinArticleDao">
+    
+	<sql id="jtydWeixinArticleColumns">
+		a.id AS "id",
+		a.weixin_name AS "weixinName",
+		a.weixin_code AS "weixinCode",
+		a.article_name AS "articleName",
+		a.article_url AS "articleUrl",
+		a.article_content AS "articleContent",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jtydWeixinArticleJoins">
+	</sql>
+    
+	<select id="get" resultType="JtydWeixinArticle">
+		SELECT 
+			<include refid="jtydWeixinArticleColumns"/>
+		FROM jtyd_weixin_article a
+		<include refid="jtydWeixinArticleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JtydWeixinArticle">
+		SELECT 
+			<include refid="jtydWeixinArticleColumns"/>
+		FROM jtyd_weixin_article a
+		<include refid="jtydWeixinArticleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="weixinName != null and weixinName != ''">
+				AND a.weixin_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{weixinName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{weixinName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{weixinName},'%')</if>
+			</if>
+			<if test="weixinCode != null and weixinCode != ''">
+				AND a.weixin_code = #{weixinCode}
+			</if>
+			<if test="articleName != null and articleName != ''">
+				AND a.article_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{articleName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{articleName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{articleName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JtydWeixinArticle">
+		SELECT 
+			<include refid="jtydWeixinArticleColumns"/>
+		FROM jtyd_weixin_article a
+		<include refid="jtydWeixinArticleJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_weixin_article(
+			id,
+			weixin_name,
+			weixin_code,
+			article_name,
+			article_url,
+			article_content,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{weixinName},
+			#{weixinCode},
+			#{articleName},
+			#{articleUrl},
+			#{articleContent},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_weixin_article SET 	
+			weixin_name = #{weixinName},
+			weixin_code = #{weixinCode},
+			article_name = #{articleName},
+			article_url = #{articleUrl},
+			article_content = #{articleContent},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jtyd_weixin_article SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

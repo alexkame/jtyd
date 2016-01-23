@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydPlatformUsersDao">
+    
+	<sql id="jtydPlatformUsersColumns">
+		a.id AS "id",
+		a.platform_id AS "platformId",
+		a.user_name AS "userName",
+		a.user_acct AS "userAcct",
+		a.user_password AS "userPassword",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jtydPlatformUsersJoins">
+	</sql>
+    
+	<select id="get" resultType="JtydPlatformUsers">
+		SELECT 
+			<include refid="jtydPlatformUsersColumns"/>
+		FROM jtyd_platform_users a
+		<include refid="jtydPlatformUsersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JtydPlatformUsers">
+		SELECT 
+			<include refid="jtydPlatformUsersColumns"/>
+		FROM jtyd_platform_users a
+		<include refid="jtydPlatformUsersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="platformId != null and platformId != ''">
+				AND a.platform_id = #{platformId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JtydPlatformUsers">
+		SELECT 
+			<include refid="jtydPlatformUsersColumns"/>
+		FROM jtyd_platform_users a
+		<include refid="jtydPlatformUsersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_platform_users(
+			id,
+			platform_id,
+			user_name,
+			user_acct,
+			user_password,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{platformId},
+			#{userName},
+			#{userAcct},
+			#{userPassword},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_platform_users SET 	
+			platform_id = #{platformId},
+			user_name = #{userName},
+			user_acct = #{userAcct},
+			user_password = #{userPassword},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jtyd_platform_users SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

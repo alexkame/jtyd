@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydPlatformDao">
+    
+	<sql id="jtydPlatformColumns">
+		a.id AS "id",
+		a.platform_name AS "platformName",
+		a.platform_code AS "platformCode",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="jtydPlatformJoins">
+	</sql>
+    
+	<select id="get" resultType="JtydPlatform">
+		SELECT 
+			<include refid="jtydPlatformColumns"/>
+		FROM jtyd_platform a
+		<include refid="jtydPlatformJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="JtydPlatform">
+		SELECT 
+			<include refid="jtydPlatformColumns"/>
+		FROM jtyd_platform a
+		<include refid="jtydPlatformJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="platformName != null and platformName != ''">
+				AND a.platform_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{platformName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{platformName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{platformName},'%')</if>
+			</if>
+			<if test="platformCode != null and platformCode != ''">
+				AND a.platform_code = #{platformCode}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="JtydPlatform">
+		SELECT 
+			<include refid="jtydPlatformColumns"/>
+		FROM jtyd_platform a
+		<include refid="jtydPlatformJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_platform(
+			id,
+			platform_name,
+			platform_code,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{platformName},
+			#{platformCode},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_platform SET 	
+			platform_name = #{platformName},
+			platform_code = #{platformCode},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jtyd_platform SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.weixin.dao.JtydVisitLogDao">
+ 
+	<sql id="jtydVisitLogColumns">
+		a.id AS "id",
+		a.wbuser_id AS "wbuserId",
+		a.article_id AS "articleId",
+		a.visit_ip AS "visitIp",
+		a.visit_date AS "visitDate",
+		a.browser_type AS "browserType",
+		a.browser_versions AS "browserVersions",
+		a.province AS "province",
+		a.city AS "city",
+		a.jtyd_task_id 	 	 as   "jtydTaskId", 		 
+	    a.from_plantform_id  as  "fromPlantformId" ,		   
+	    a.to_plantform_id    as  "toPlantformId" ,		 
+	    a.referer     as "referer" ,		 
+	    a.client_type as "clientType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		
+	</sql>
+	
+	<sql id="jtydVisitLogJoins">
+	</sql>
+    
+	<select id="get" resultType="JtydVisitLog">
+		SELECT 
+			<include refid="jtydVisitLogColumns"/>
+		FROM jtyd_visit_log a
+		<include refid="jtydVisitLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- <select id="findList" resultType="JtydVisitLog">
+		SELECT 
+			<include refid="jtydVisitLogColumns"/>
+		FROM jtyd_visit_log a
+		<include refid="jtydVisitLogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="wbuserId != null and wbuserId != ''">
+				AND a.wbuser_id = #{wbuserId}
+			</if>
+			<if test="articleId != null and articleId != ''">
+				AND a.article_id = #{articleId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select> -->
+	 <select id="findList" resultType="JtydVisitLog">
+		SELECT 
+	 	a.id AS "id",
+		a.wbuser_id AS "wbuserId",
+		a.article_id AS "articleId",
+		a.visit_ip AS "visitIp",
+		a.visit_date AS "visitDate",
+		a.browser_type AS "browserType",
+		a.browser_versions AS "browserVersions",
+		a.province AS "province",
+		a.city AS "city",
+		a.jtyd_task_id 	 	 as   "jtydTaskId", 		 
+	    a.from_plantform_id  as  "fromPlantformId" ,		   
+	    a.to_plantform_id    as  "toPlantformId" ,		 
+	    a.referer     as "referer" ,		 
+	    a.client_type as "clientType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.article_name as "articleName" ,
+		c.user_name as "userName"	 	
+		 from jtyd_visit_log a 
+		 left join 
+         jtyd_weixin_article b on (a.article_id = b.id) 
+         left join 
+         jtyd_weibo_user c on (a.wbuser_id=c.user_id) 
+		 
+		where	a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="articleName != null and articleName != ''">
+				AND b.article_name like   concat('%',#{articleName},'%')
+			</if>
+			<if test="userName != null and userName != ''">
+				AND c.user_name like   concat('%',#{userName},'%')
+			</if>
+		 
+		ORDER BY visit_date desc
+	</select>
+	<select id="findAllList" resultType="JtydVisitLog">
+		SELECT 
+			<include refid="jtydVisitLogColumns"/>
+		FROM jtyd_visit_log a
+		<include refid="jtydVisitLogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jtyd_visit_log(
+			id,
+			wbuser_id,
+			article_id,
+			visit_ip,
+			visit_date,
+			browser_type,
+			browser_versions,
+			province,
+			city,
+			jtyd_task_id, 		 
+		    from_plantform_id ,		   
+		    to_plantform_id,		 
+		    referer,		 
+		    client_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{wbuserId},
+			#{articleId},
+			#{visitIp},
+			#{visitDate},
+			#{browserType},
+			#{browserVersions},
+			#{province},
+			#{city},
+			#{jtydTaskId},		 
+	        #{fromPlantformId},		   
+	        #{toPlantformId}, 
+	        #{referer},		 
+	        #{clientType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jtyd_visit_log SET 	
+			wbuser_id = #{wbuserId},
+			article_id = #{articleId},
+			visit_ip = #{visitIp},
+			visit_date = #{visitDate},
+			browser_type = #{browserType},
+			browser_versions = #{browserVersions},
+			province = #{province},
+			city = #{city},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jtyd_visit_log SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
