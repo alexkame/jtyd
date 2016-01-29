@@ -20,7 +20,7 @@
 	<nav> 
 	 
 	           <a href="">
-					<img src="${pageContext.request.contextPath}/static/index/img/logo4.png">
+					<img src="${pageContext.request.contextPath}/static/index/img/logo.png">
 				</a>   
 	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -39,10 +39,22 @@
 					<li>关于我们</li>
 				</a>
 				<a href="${pageContext.request.contextPath}/a">
-					<li>管理登录</li>
+					<li>管理登录
+
+					
+					</li>
 				</a>
 			</ul>
 		</nav>
+							<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_tsina">新浪微博</a>
+<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v2.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
 		<main id="index-main">
 			<img src="${pageContext.request.contextPath}/static/index/img/show-1.png" />
 			<section style="height: 430px;"  class="module dark">
