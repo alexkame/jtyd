@@ -20,7 +20,7 @@
 	<nav> 
 	 
 	           <a href="">
-					<img src="${pageContext.request.contextPath}/static/index/img/logo.png">
+					<img src="${pageContext.request.contextPath}/static/index/img/logo4.png">
 				</a>   
 	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
